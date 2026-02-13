@@ -49,7 +49,7 @@ const AdminLogin = () => {
             <img 
               src="/logo.webp" 
               alt="Handsome Restaurant Logo" 
-              className="h-20 w-auto object-contain"
+              className="h-24 w-24 rounded-full object-cover border-4 border-restaurant-gold/30 shadow-lg"
               onError={(e) => {
                 console.error('Logo failed to load');
                 e.target.style.display = 'none';

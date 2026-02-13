@@ -55,7 +55,7 @@ const AdminDashboard = () => {
             <img 
               src="/logo.webp" 
               alt="Handsome Restaurant Logo" 
-              className="h-10 w-auto object-contain"
+              className="h-12 w-12 rounded-full object-cover border-2 border-restaurant-gold/30 shadow-md"
               onError={(e) => {
                 console.error('Logo failed to load');
                 e.target.style.display = 'none';

@@ -183,7 +183,7 @@ const CustomerInterface = () => {
               <img 
                 src="/logo.webp" 
                 alt="Handsome Restaurant Logo" 
-                className="h-10 w-auto object-contain"
+                className="h-16 w-16 rounded-full object-cover border-2 border-restaurant-gold/30 shadow-lg"
                 onError={(e) => {
                   console.error('Logo failed to load');
                   e.target.style.display = 'none';
