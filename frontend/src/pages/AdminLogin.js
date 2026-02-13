@@ -42,22 +42,22 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-restaurant-dark flex items-center justify-center p-4">
-      <div className="bg-black/50 backdrop-blur-sm rounded-lg p-8 w-full max-w-md border border-restaurant-gold/20">
-        <div className="text-center mb-8">
+    <div className="min-h-screen bg-restaurant-dark flex items-center justify-center p-4 sm:p-6">
+      <div className="bg-black/50 backdrop-blur-sm rounded-lg p-6 sm:p-8 w-full max-w-md border border-restaurant-gold/20">
+        <div className="text-center mb-6 sm:mb-8">
           <div className="flex justify-center mb-4">
             <img 
               src="/logo.webp" 
               alt="Handsome Restaurant Logo" 
-              className="h-24 w-24 rounded-full object-cover border-4 border-restaurant-gold/30 shadow-lg"
+              className="h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 rounded-full object-cover border-2 sm:border-4 border-restaurant-gold/30 shadow-lg"
               onError={(e) => {
                 console.error('Logo failed to load');
                 e.target.style.display = 'none';
               }}
             />
           </div>
-          <h1 className="text-4xl font-bold text-restaurant-gold mb-2">Handsome Restaurant</h1>
-          <p className="text-gray-400">Admin Dashboard</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-restaurant-gold mb-2">Handsome Restaurant</h1>
+          <p className="text-sm sm:text-base text-gray-400">Admin Dashboard</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -98,7 +98,7 @@ const AdminLogin = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-restaurant-gold text-black px-4 py-3 rounded-lg font-bold text-lg hover:bg-restaurant-warm transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-restaurant-gold text-black px-4 py-3 rounded-lg font-bold text-base sm:text-lg hover:bg-restaurant-warm transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Logging in...' : 'Login'}
           </button>

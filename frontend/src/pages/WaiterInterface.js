@@ -462,90 +462,90 @@ const WaiterInterface = () => {
       <div className="min-h-screen bg-gradient-to-br from-restaurant-dark via-black to-restaurant-dark text-white print:hidden">
         {/* Professional Header */}
       <header className="bg-gradient-to-r from-black/90 to-black/70 backdrop-blur-md border-b-2 border-restaurant-gold/30 sticky top-0 z-50 shadow-lg">
-        <div className="container mx-auto px-6 py-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+        <div className="container mx-auto px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-5">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 sm:gap-3 md:gap-4 min-w-0 flex-1">
               <img 
                 src="/logo.webp" 
                 alt="Handsome Restaurant Logo" 
-                className="h-20 w-20 rounded-full object-cover border-2 border-restaurant-gold/30 shadow-lg"
+                className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 rounded-full object-cover border-2 border-restaurant-gold/30 shadow-lg flex-shrink-0"
                 onError={(e) => {
                   console.error('Logo failed to load');
                   e.target.style.display = 'none';
                 }}
               />
-              <div>
-                <h1 className="text-4xl font-bold text-restaurant-gold mb-1">Waiter Dashboard</h1>
-                <p className="text-sm text-gray-300 font-medium">Handsome Restaurant • Staff Management System</p>
+              <div className="min-w-0">
+                <h1 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-bold text-restaurant-gold mb-0.5 sm:mb-1 truncate">Waiter Dashboard</h1>
+                <p className="text-xs sm:text-sm text-gray-300 font-medium hidden sm:block">Handsome Restaurant • Staff Management System</p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
               <button
                 onClick={fetchData}
-                className="bg-restaurant-gold/90 hover:bg-restaurant-gold text-black px-6 py-3 rounded-lg font-bold transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-restaurant-gold/50 transform hover:scale-105"
+                className="bg-restaurant-gold/90 hover:bg-restaurant-gold text-black px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg font-bold transition-all duration-200 flex items-center gap-1 sm:gap-2 shadow-lg hover:shadow-restaurant-gold/50 transform hover:scale-105 text-sm sm:text-base"
               >
-                <FiRefreshCw className="text-lg" /> Refresh
+                <FiRefreshCw className="text-base sm:text-lg" /> <span className="hidden sm:inline">Refresh</span>
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="container mx-auto px-6 py-8">
+      <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
         {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-gradient-to-br from-black/40 to-black/20 backdrop-blur-sm rounded-xl p-5 border border-restaurant-gold/20 shadow-lg">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+          <div className="bg-gradient-to-br from-black/40 to-black/20 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-5 border border-restaurant-gold/20 shadow-lg">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm font-medium mb-1">Total Tables</p>
-                <p className="text-3xl font-bold text-white">{stats.totalTables}</p>
+              <div className="min-w-0">
+                <p className="text-gray-400 text-xs sm:text-sm font-medium mb-1">Total Tables</p>
+                <p className="text-xl sm:text-2xl md:text-3xl font-bold text-white">{stats.totalTables}</p>
               </div>
-              <div className="bg-restaurant-gold/20 p-3 rounded-lg">
-                <FiUsers className="text-2xl text-restaurant-gold" />
+              <div className="bg-restaurant-gold/20 p-2 sm:p-3 rounded-lg flex-shrink-0">
+                <FiUsers className="text-lg sm:text-xl md:text-2xl text-restaurant-gold" />
               </div>
             </div>
           </div>
-          <div className="bg-gradient-to-br from-black/40 to-black/20 backdrop-blur-sm rounded-xl p-5 border border-red-500/20 shadow-lg">
+          <div className="bg-gradient-to-br from-black/40 to-black/20 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-5 border border-red-500/20 shadow-lg">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm font-medium mb-1">Occupied</p>
-                <p className="text-3xl font-bold text-red-400">{stats.occupiedTables}</p>
+              <div className="min-w-0">
+                <p className="text-gray-400 text-xs sm:text-sm font-medium mb-1">Occupied</p>
+                <p className="text-xl sm:text-2xl md:text-3xl font-bold text-red-400">{stats.occupiedTables}</p>
               </div>
-              <div className="bg-red-500/20 p-3 rounded-lg">
-                <div className="w-6 h-6 bg-red-500 rounded-full"></div>
+              <div className="bg-red-500/20 p-2 sm:p-3 rounded-lg flex-shrink-0">
+                <div className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 bg-red-500 rounded-full"></div>
               </div>
             </div>
           </div>
-          <div className="bg-gradient-to-br from-black/40 to-black/20 backdrop-blur-sm rounded-xl p-5 border border-yellow-500/20 shadow-lg">
+          <div className="bg-gradient-to-br from-black/40 to-black/20 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-5 border border-yellow-500/20 shadow-lg">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm font-medium mb-1">Active Orders</p>
-                <p className="text-3xl font-bold text-yellow-400">{stats.activeOrders}</p>
+              <div className="min-w-0">
+                <p className="text-gray-400 text-xs sm:text-sm font-medium mb-1">Active Orders</p>
+                <p className="text-xl sm:text-2xl md:text-3xl font-bold text-yellow-400">{stats.activeOrders}</p>
               </div>
-              <div className="bg-yellow-500/20 p-3 rounded-lg">
-                <FiShoppingBag className="text-2xl text-yellow-400" />
+              <div className="bg-yellow-500/20 p-2 sm:p-3 rounded-lg flex-shrink-0">
+                <FiShoppingBag className="text-lg sm:text-xl md:text-2xl text-yellow-400" />
               </div>
             </div>
           </div>
-          <div className="bg-gradient-to-br from-black/40 to-black/20 backdrop-blur-sm rounded-xl p-5 border border-green-500/20 shadow-lg">
+          <div className="bg-gradient-to-br from-black/40 to-black/20 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-5 border border-green-500/20 shadow-lg">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm font-medium mb-1">Today's Revenue</p>
-                <p className="text-3xl font-bold text-green-400">${stats.totalRevenue.toFixed(2)}</p>
+              <div className="min-w-0">
+                <p className="text-gray-400 text-xs sm:text-sm font-medium mb-1">Today's Revenue</p>
+                <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-green-400">${stats.totalRevenue.toFixed(2)}</p>
               </div>
-              <div className="bg-green-500/20 p-3 rounded-lg">
-                <FiDollarSign className="text-2xl text-green-400" />
+              <div className="bg-green-500/20 p-2 sm:p-3 rounded-lg flex-shrink-0">
+                <FiDollarSign className="text-lg sm:text-xl md:text-2xl text-green-400" />
               </div>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Tables Grid */}
           <div className="lg:col-span-2">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-3xl font-bold text-white">Table Management</h2>
-              <div className="flex items-center gap-2 text-sm text-gray-400">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-2">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">Table Management</h2>
+              <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-400 flex-wrap">
                 <div className="flex items-center gap-1">
                   <div className="w-3 h-3 rounded-full bg-green-500"></div>
                   <span>Free</span>
@@ -567,7 +567,7 @@ const WaiterInterface = () => {
                   <p className="text-gray-500 text-sm">Please create tables in the Admin Dashboard</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2 sm:gap-3 md:gap-4">
                   {tables.map(table => {
                     // Find order for this table - handle both string and number comparison
                     const tableOrder = orders.find(o => {
@@ -594,9 +594,9 @@ const WaiterInterface = () => {
                       {tableOrder && (
                         <div className="absolute top-2 right-2 w-4 h-4 bg-yellow-500 rounded-full animate-pulse shadow-lg shadow-yellow-500/50"></div>
                       )}
-                      <div className={`w-5 h-5 rounded-full mb-2 shadow-lg ${getStatusColor(table.status)}`}></div>
-                      <span className="text-3xl font-bold text-white group-hover:text-restaurant-gold transition">{table.number}</span>
-                      <span className="text-xs text-gray-400 mt-1 font-medium">{table.capacity} seats</span>
+                      <div className={`w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 rounded-full mb-1 sm:mb-2 shadow-lg ${getStatusColor(table.status)}`}></div>
+                      <span className="text-xl sm:text-2xl md:text-3xl font-bold text-white group-hover:text-restaurant-gold transition">{table.number}</span>
+                      <span className="text-xs text-gray-400 mt-0.5 sm:mt-1 font-medium">{table.capacity} seats</span>
                       {tableOrder && (
                         <span className="text-xs text-yellow-400 mt-1 font-bold bg-yellow-500/20 px-2 py-0.5 rounded-full">
                           {tableOrder.status.toUpperCase()}
@@ -612,11 +612,11 @@ const WaiterInterface = () => {
 
           {/* Order Details */}
           <div className="lg:col-span-1">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-3xl font-bold text-white">Order Details</h2>
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">Order Details</h2>
             </div>
             {selectedTable ? (
-              <div className="bg-gradient-to-br from-black/40 to-black/20 backdrop-blur-sm rounded-2xl p-6 border border-restaurant-gold/20 shadow-2xl sticky top-24">
+              <div className="bg-gradient-to-br from-black/40 to-black/20 backdrop-blur-sm rounded-2xl p-4 sm:p-5 md:p-6 border border-restaurant-gold/20 shadow-2xl lg:sticky lg:top-24">
                 <div className="mb-6 pb-6 border-b-2 border-restaurant-gold/20">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-2xl font-bold text-white">Table {selectedTable.number}</h3>

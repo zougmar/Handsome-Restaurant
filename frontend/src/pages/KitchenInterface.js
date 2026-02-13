@@ -201,58 +201,58 @@ const KitchenInterface = () => {
   }
 
   return (
-    <div className="min-h-screen bg-restaurant-dark text-white p-6">
+    <div className="min-h-screen bg-restaurant-dark text-white p-3 sm:p-4 md:p-6">
       {/* Audio for new order notifications - add notification.mp3 to public folder */}
       <audio ref={audioRef} preload="auto" style={{ display: 'none' }}>
         <source src="/notification.mp3" type="audio/mpeg" />
       </audio>
       
       {/* Header */}
-      <header className="mb-6 flex items-center gap-4">
+      <header className="mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3 md:gap-4">
         <img 
           src="/logo.webp" 
           alt="Handsome Restaurant Logo" 
-          className="h-20 w-20 rounded-full object-cover border-2 border-restaurant-gold/30 shadow-lg"
+          className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 rounded-full object-cover border-2 border-restaurant-gold/30 shadow-lg flex-shrink-0"
           onError={(e) => {
             console.error('Logo failed to load');
             e.target.style.display = 'none';
           }}
         />
-        <div>
-          <h1 className="text-4xl font-bold text-restaurant-gold">Kitchen Display System</h1>
-          <p className="text-gray-400">Handsome Restaurant</p>
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-restaurant-gold">Kitchen Display System</h1>
+          <p className="text-xs sm:text-sm md:text-base text-gray-400">Handsome Restaurant</p>
         </div>
       </header>
 
       {/* Orders Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
         {orders.map(order => (
           <div
             key={order._id}
             className={`border-2 rounded-lg p-4 ${getStatusColor(order.status)} fade-in`}
           >
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <h3 className="text-2xl font-bold">Table {order.tableNumber}</h3>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="text-2xl">{getStatusIcon(order.status)}</span>
-                  <span className="text-sm capitalize">{order.status}</span>
+            <div className="flex items-center justify-between mb-2 sm:mb-3 gap-2">
+              <div className="min-w-0 flex-1">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold">Table {order.tableNumber}</h3>
+                <div className="flex items-center gap-1 sm:gap-2 mt-0.5 sm:mt-1">
+                  <span className="text-lg sm:text-xl md:text-2xl">{getStatusIcon(order.status)}</span>
+                  <span className="text-xs sm:text-sm capitalize">{order.status}</span>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="text-right flex-shrink-0">
                 {(order.status === 'preparing' || order.status === 'ready') && (
-                  <div className="flex items-center gap-1 text-sm text-gray-400">
-                    <FiClock />
+                  <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-400">
+                    <FiClock className="text-sm sm:text-base" />
                     <span>{getElapsedTime(order) || '0:00'}</span>
                     {order.status === 'ready' && (
-                      <span className="text-green-400 ml-1">(Stopped)</span>
+                      <span className="text-green-400 ml-1 hidden sm:inline">(Stopped)</span>
                     )}
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="space-y-2 mb-4">
+            <div className="space-y-2 mb-3 sm:mb-4">
               {order.items.map((item, index) => {
                 // Get image from item.menuItem if populated, or from item.image
                 const itemImage = item.menuItem?.image || item.image || null;
@@ -261,10 +261,10 @@ const KitchenInterface = () => {
                   : null;
                 
                 return (
-                  <div key={index} className="bg-gradient-to-r from-black/40 to-black/20 p-4 rounded-xl border border-gray-700/30 hover:border-restaurant-gold/30 transition-all shadow-lg">
-                    <div className="flex gap-4 items-center">
+                  <div key={index} className="bg-gradient-to-r from-black/40 to-black/20 p-2 sm:p-3 md:p-4 rounded-xl border border-gray-700/30 hover:border-restaurant-gold/30 transition-all shadow-lg">
+                    <div className="flex gap-2 sm:gap-3 md:gap-4 items-center">
                       {/* Item Image - Bigger and Better Styled */}
-                      <div className="w-28 h-28 rounded-xl overflow-hidden bg-gradient-to-br from-black/60 to-black/40 flex-shrink-0 border-2 border-restaurant-gold/30 shadow-xl relative group">
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-xl overflow-hidden bg-gradient-to-br from-black/60 to-black/40 flex-shrink-0 border-2 border-restaurant-gold/30 shadow-xl relative group">
                         {imageUrl ? (
                           <img
                             src={imageUrl}
@@ -280,23 +280,23 @@ const KitchenInterface = () => {
                           🍽️
                         </div>
                         {/* Quantity Badge Overlay */}
-                        <div className="absolute top-2 right-2 bg-restaurant-gold text-black rounded-full w-7 h-7 flex items-center justify-center font-bold text-sm shadow-lg border-2 border-black/50">
+                        <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-restaurant-gold text-black rounded-full w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 flex items-center justify-center font-bold text-xs sm:text-sm shadow-lg border-2 border-black/50">
                           {item.quantity}
                         </div>
                       </div>
                       
                       {/* Item Details */}
                       <div className="flex-1 min-w-0">
-                        <div className="mb-2">
-                          <h4 className="font-bold text-white text-lg mb-1 truncate">{item.name}</h4>
-                          <div className="flex items-center gap-2">
-                            <span className="text-restaurant-gold font-bold text-base">Qty: {item.quantity}</span>
-                            <span className="text-gray-400">•</span>
-                            <span className="text-gray-300 text-sm">${item.price?.toFixed(2) || '0.00'}</span>
+                        <div className="mb-1 sm:mb-2">
+                          <h4 className="font-bold text-white text-sm sm:text-base md:text-lg mb-0.5 sm:mb-1 truncate">{item.name}</h4>
+                          <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+                            <span className="text-restaurant-gold font-bold text-xs sm:text-sm md:text-base">Qty: {item.quantity}</span>
+                            <span className="text-gray-400 hidden sm:inline">•</span>
+                            <span className="text-gray-300 text-xs sm:text-sm">${item.price?.toFixed(2) || '0.00'}</span>
                           </div>
                         </div>
                         {item.specialInstructions && (
-                          <div className="mt-2 p-2 bg-yellow-500/20 border border-yellow-500/30 rounded-lg">
+                          <div className="mt-1 sm:mt-2 p-1.5 sm:p-2 bg-yellow-500/20 border border-yellow-500/30 rounded-lg">
                             <p className="text-xs text-yellow-300 font-medium">📝 {item.specialInstructions}</p>
                           </div>
                         )}
@@ -307,17 +307,17 @@ const KitchenInterface = () => {
               })}
             </div>
 
-            <div className="pt-3 border-t border-gray-700">
-              <div className="flex justify-between mb-3">
-                <span className="font-semibold">Total:</span>
-                <span className="text-restaurant-gold font-bold">${order.totalAmount.toFixed(2)}</span>
+            <div className="pt-2 sm:pt-3 border-t border-gray-700">
+              <div className="flex justify-between mb-2 sm:mb-3">
+                <span className="font-semibold text-sm sm:text-base">Total:</span>
+                <span className="text-restaurant-gold font-bold text-sm sm:text-base md:text-lg">${order.totalAmount.toFixed(2)}</span>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1.5 sm:space-y-2">
                 {order.status === 'pending' && (
                   <button
                     onClick={() => updateOrderStatus(order._id, 'preparing')}
-                    className="w-full bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-yellow-700 transition"
+                    className="w-full bg-yellow-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-semibold hover:bg-yellow-700 transition text-sm sm:text-base"
                   >
                     Start Preparing
                   </button>
@@ -325,13 +325,13 @@ const KitchenInterface = () => {
                 {order.status === 'preparing' && (
                   <button
                     onClick={() => updateOrderStatus(order._id, 'ready')}
-                    className="w-full bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition flex items-center justify-center gap-2"
+                    className="w-full bg-green-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-semibold hover:bg-green-700 transition flex items-center justify-center gap-1 sm:gap-2 text-sm sm:text-base"
                   >
-                    <FiCheck /> Mark as Ready
+                    <FiCheck className="text-sm sm:text-base" /> Mark as Ready
                   </button>
                 )}
                 {order.status === 'ready' && (
-                  <div className="text-center text-green-400 font-semibold py-2">
+                  <div className="text-center text-green-400 font-semibold py-1.5 sm:py-2 text-sm sm:text-base">
                     Ready for Pickup
                   </div>
                 )}
