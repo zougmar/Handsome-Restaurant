@@ -6,7 +6,6 @@ const MenuManagement = () => {
   const [menu, setMenu] = useState([]);
   // eslint-disable-next-line no-unused-vars
   const [categories, setCategories] = useState([]);
-  const [newCategory, setNewCategory] = useState('');
   const [showNewCategoryInput, setShowNewCategoryInput] = useState(false);
   const [loading, setLoading] = useState(true);
   // eslint-disable-next-line no-unused-vars
@@ -192,7 +191,6 @@ const MenuManagement = () => {
     setEditingItem(null);
     setShowModal(false);
     setShowNewCategoryInput(false);
-    setNewCategory('');
   };
 
   if (loading) {
