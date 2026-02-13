@@ -1,6 +1,5 @@
 const { connectToDatabase } = require('../_lib/mongodb');
-const path = require('path');
-const Menu = require(path.join(process.cwd(), 'backend', 'models', 'Menu'));
+const { getMenuModel } = require('../_lib/models');
 
 module.exports = async (req, res) => {
   // Set CORS headers
@@ -23,10 +22,16 @@ module.exports = async (req, res) => {
 
   try {
     await connectToDatabase();
+    const Menu = getMenuModel();
     const categories = await Menu.distinct('category');
     res.status(200).json(categories.filter(cat => cat)); // Remove null/undefined
   } catch (error) {
     console.error('Categories fetch error:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    console.error('Error stack:', error.stack);
+    res.status(500).json({ 
+      message: 'Server error', 
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 };

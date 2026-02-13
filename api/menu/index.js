@@ -1,6 +1,5 @@
 const { connectToDatabase } = require('../_lib/mongodb');
-const path = require('path');
-const Menu = require(path.join(process.cwd(), 'backend', 'models', 'Menu'));
+const { getMenuModel } = require('../_lib/models');
 
 module.exports = async (req, res) => {
   // Set CORS headers
@@ -23,21 +22,31 @@ module.exports = async (req, res) => {
 
   try {
     await connectToDatabase();
+    const Menu = getMenuModel();
     const menu = await Menu.find({ isAvailable: true }).sort({ category: 1, name: 1 });
     
-    // Convert images to full URLs if needed
-    const menuWithImages = menu.map(item => ({
-      ...item.toObject(),
-      image: item.image && !item.image.startsWith('http') 
-        ? item.image.startsWith('/') 
-          ? `${req.headers.origin || ''}${item.image}`
-          : item.image
-        : item.image
-    }));
+    // Convert to plain objects
+    const menuWithImages = menu.map(item => {
+      const itemObj = item.toObject ? item.toObject() : item;
+      return {
+        ...itemObj,
+        _id: itemObj._id?.toString() || itemObj._id,
+        image: itemObj.image && !itemObj.image.startsWith('http') 
+          ? itemObj.image.startsWith('/') 
+            ? `${req.headers.origin || ''}${itemObj.image}`
+            : itemObj.image
+          : itemObj.image
+      };
+    });
 
     res.status(200).json(menuWithImages);
   } catch (error) {
     console.error('Menu fetch error:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    console.error('Error stack:', error.stack);
+    res.status(500).json({ 
+      message: 'Server error', 
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 };
