@@ -1,0 +1,10 @@
+node_modules
+backend
+.git
+.env
+.env.local
+*.log
+.DS_Store
+README.md
+SETUP.md
+QUICKSTART.md
