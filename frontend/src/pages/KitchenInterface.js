@@ -184,9 +184,20 @@ const KitchenInterface = () => {
       </audio>
       
       {/* Header */}
-      <header className="mb-6">
-        <h1 className="text-4xl font-bold text-restaurant-gold">Kitchen Display System</h1>
-        <p className="text-gray-400">Handsome Restaurant</p>
+      <header className="mb-6 flex items-center gap-4">
+        <img 
+          src="/logo.webp" 
+          alt="Handsome Restaurant Logo" 
+          className="h-12 w-auto object-contain"
+          onError={(e) => {
+            console.error('Logo failed to load');
+            e.target.style.display = 'none';
+          }}
+        />
+        <div>
+          <h1 className="text-4xl font-bold text-restaurant-gold">Kitchen Display System</h1>
+          <p className="text-gray-400">Handsome Restaurant</p>
+        </div>
       </header>
 
       {/* Orders Grid */}

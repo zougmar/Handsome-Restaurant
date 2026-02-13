@@ -6,6 +6,8 @@ const MenuManagement = () => {
   const [menu, setMenu] = useState([]);
   // eslint-disable-next-line no-unused-vars
   const [categories, setCategories] = useState([]);
+  const [newCategory, setNewCategory] = useState('');
+  const [showNewCategoryInput, setShowNewCategoryInput] = useState(false);
   const [loading, setLoading] = useState(true);
   // eslint-disable-next-line no-unused-vars
   const [showModal, setShowModal] = useState(false);
@@ -124,6 +126,11 @@ const MenuManagement = () => {
       imageUrl: item.image && item.image.startsWith('http') ? item.image : ''
     });
     
+    // Add category to list if it doesn't exist
+    if (item.category && !categories.includes(item.category)) {
+      setCategories([...categories, item.category].sort());
+    }
+    
     // Determine if existing image is a URL or uploaded file
     if (item.image) {
       if (item.image.startsWith('http')) {
@@ -137,6 +144,7 @@ const MenuManagement = () => {
       setImagePreview(null);
       setUseImageUrl(false);
     }
+    setShowNewCategoryInput(false);
     setShowModal(true);
   };
 
@@ -183,6 +191,8 @@ const MenuManagement = () => {
     setUseImageUrl(false);
     setEditingItem(null);
     setShowModal(false);
+    setShowNewCategoryInput(false);
+    setNewCategory('');
   };
 
   if (loading) {
@@ -308,14 +318,67 @@ const MenuManagement = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Category</label>
-                <input
-                  type="text"
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  required
-                  className="w-full bg-black/30 border border-gray-700 rounded-lg px-4 py-2 text-white"
-                  placeholder="e.g., Appetizers, Main Course, Desserts"
-                />
+                <div className="space-y-2">
+                  {!showNewCategoryInput ? (
+                    <div className="flex gap-2">
+                      <select
+                        value={formData.category}
+                        onChange={(e) => {
+                          if (e.target.value === '__new__') {
+                            setShowNewCategoryInput(true);
+                            setFormData({ ...formData, category: '' });
+                          } else {
+                            setFormData({ ...formData, category: e.target.value });
+                          }
+                        }}
+                        required={!showNewCategoryInput}
+                        className="flex-1 bg-black/30 border border-gray-700 rounded-lg px-4 py-2 text-white"
+                      >
+                        <option value="">Select a category</option>
+                        {categories.map((cat) => (
+                          <option key={cat} value={cat}>
+                            {cat}
+                          </option>
+                        ))}
+                        <option value="__new__">+ Add New Category</option>
+                      </select>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={formData.category}
+                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                        onBlur={() => {
+                          if (formData.category && !categories.includes(formData.category)) {
+                            setCategories([...categories, formData.category].sort());
+                          }
+                        }}
+                        required
+                        className="flex-1 bg-black/30 border border-gray-700 rounded-lg px-4 py-2 text-white"
+                        placeholder="Enter new category name"
+                        autoFocus
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowNewCategoryInput(false);
+                          if (!formData.category || categories.includes(formData.category)) {
+                            setFormData({ ...formData, category: categories[0] || '' });
+                          } else {
+                            setCategories([...categories, formData.category].sort());
+                          }
+                        }}
+                        className="px-3 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition"
+                      >
+                        Done
+                      </button>
+                    </div>
+                  )}
+                  {formData.category && !showNewCategoryInput && (
+                    <p className="text-xs text-gray-400">Selected: {formData.category}</p>
+                  )}
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Product Image</label>

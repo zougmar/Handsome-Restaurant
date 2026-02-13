@@ -448,9 +448,20 @@ const WaiterInterface = () => {
       <header className="bg-gradient-to-r from-black/90 to-black/70 backdrop-blur-md border-b-2 border-restaurant-gold/30 sticky top-0 z-50 shadow-lg">
         <div className="container mx-auto px-6 py-5">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-4xl font-bold text-restaurant-gold mb-1">Waiter Dashboard</h1>
-              <p className="text-sm text-gray-300 font-medium">Handsome Restaurant • Staff Management System</p>
+            <div className="flex items-center gap-4">
+              <img 
+                src="/logo.webp" 
+                alt="Handsome Restaurant Logo" 
+                className="h-12 w-auto object-contain"
+                onError={(e) => {
+                  console.error('Logo failed to load');
+                  e.target.style.display = 'none';
+                }}
+              />
+              <div>
+                <h1 className="text-4xl font-bold text-restaurant-gold mb-1">Waiter Dashboard</h1>
+                <p className="text-sm text-gray-300 font-medium">Handsome Restaurant • Staff Management System</p>
+              </div>
             </div>
             <div className="flex items-center gap-4">
               <button

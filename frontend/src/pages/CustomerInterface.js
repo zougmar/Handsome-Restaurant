@@ -179,9 +179,20 @@ const CustomerInterface = () => {
       <header className="bg-black/50 backdrop-blur-sm border-b border-restaurant-gold/20 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-restaurant-gold">Handsome Restaurant</h1>
-              <p className="text-sm text-gray-400">Digital Menu</p>
+            <div className="flex items-center gap-3">
+              <img 
+                src="/logo.webp" 
+                alt="Handsome Restaurant Logo" 
+                className="h-10 w-auto object-contain"
+                onError={(e) => {
+                  console.error('Logo failed to load');
+                  e.target.style.display = 'none';
+                }}
+              />
+              <div>
+                <h1 className="text-3xl font-bold text-restaurant-gold">Handsome Restaurant</h1>
+                <p className="text-sm text-gray-400">Digital Menu</p>
+              </div>
             </div>
             {orderStatus && (
               <div className="text-right">
