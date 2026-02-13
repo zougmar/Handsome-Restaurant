@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import logo from '../images/dark3.webp';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -45,6 +46,13 @@ const AdminLogin = () => {
     <div className="min-h-screen bg-restaurant-dark flex items-center justify-center p-4">
       <div className="bg-black/50 backdrop-blur-sm rounded-lg p-8 w-full max-w-md border border-restaurant-gold/20">
         <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+            <img 
+              src={logo} 
+              alt="Handsome Restaurant Logo" 
+              className="h-20 w-auto object-contain"
+            />
+          </div>
           <h1 className="text-4xl font-bold text-restaurant-gold mb-2">Handsome Restaurant</h1>
           <p className="text-gray-400">Admin Dashboard</p>
         </div>

@@ -13,18 +13,24 @@ const Reports = () => {
   const fetchDailyReport = useCallback(async () => {
     try {
       const response = await api.get(`/api/reports/daily?date=${selectedDate}`);
+      console.log('Daily report response:', response.data);
       setDailyReport(response.data);
     } catch (error) {
       console.error('Error fetching daily report:', error);
+      console.error('Error details:', error.response?.data || error.message);
+      setDailyReport(null);
     }
   }, [selectedDate]);
 
   const fetchMonthlyReport = useCallback(async () => {
     try {
       const response = await api.get(`/api/reports/monthly?year=${selectedYear}&month=${selectedMonth}`);
+      console.log('Monthly report response:', response.data);
       setMonthlyReport(response.data);
     } catch (error) {
       console.error('Error fetching monthly report:', error);
+      console.error('Error details:', error.response?.data || error.message);
+      setMonthlyReport(null);
     }
   }, [selectedMonth, selectedYear]);
 
@@ -39,9 +45,16 @@ const Reports = () => {
   const fetchTopSelling = useCallback(async () => {
     try {
       const response = await api.get('/api/reports/top-selling?limit=10');
-      setTopSelling(response.data);
+      console.log('Top selling response:', response.data);
+      if (response.data && Array.isArray(response.data)) {
+        setTopSelling(response.data);
+      } else {
+        setTopSelling([]);
+      }
     } catch (error) {
       console.error('Error fetching top selling:', error);
+      console.error('Error details:', error.response?.data || error.message);
+      setTopSelling([]);
     }
   }, []);
 

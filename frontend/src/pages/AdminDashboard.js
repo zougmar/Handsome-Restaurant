@@ -8,6 +8,7 @@ import OrdersManagement from '../components/admin/OrdersManagement';
 import Reports from '../components/admin/Reports';
 import DashboardHome from '../components/admin/DashboardHome';
 import { FiUsers, FiMenu, FiGrid, FiBarChart2, FiLogOut, FiHome, FiShoppingBag } from 'react-icons/fi';
+import logo from '../images/dark3.webp';
 
 const AdminDashboard = () => {
   const { user, logout, loading: authLoading } = useAuth();
@@ -51,7 +52,14 @@ const AdminDashboard = () => {
       {/* Sidebar */}
       <aside className="fixed left-0 top-0 h-full w-64 bg-black/50 backdrop-blur-sm border-r border-restaurant-gold/20">
         <div className="p-6">
-          <h1 className="text-2xl font-bold text-restaurant-gold mb-8">Handsome Restaurant</h1>
+          <div className="flex items-center gap-3 mb-8">
+            <img 
+              src={logo} 
+              alt="Handsome Restaurant Logo" 
+              className="h-10 w-auto object-contain"
+            />
+            <h1 className="text-2xl font-bold text-restaurant-gold">Handsome Restaurant</h1>
+          </div>
           <nav className="space-y-2">
             {navItems.map(item => {
               const Icon = item.icon;
