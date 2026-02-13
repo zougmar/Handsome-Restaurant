@@ -39,13 +39,21 @@ const CustomerInterface = () => {
   const fetchMenu = async () => {
     try {
       const [menuRes, categoriesRes] = await Promise.all([
-        api.get('/api/menu'),
-        api.get('/api/menu/categories')
+        api.get('/api/menu').catch(err => {
+          console.error('Menu fetch error:', err);
+          return { data: [] };
+        }),
+        api.get('/api/menu/categories').catch(err => {
+          console.error('Categories fetch error:', err);
+          return { data: [] };
+        })
       ]);
-      setMenu(menuRes.data);
-      setCategories(categoriesRes.data);
+      setMenu(menuRes.data || []);
+      setCategories(categoriesRes.data || []);
     } catch (error) {
       console.error('Error fetching menu:', error);
+      setMenu([]);
+      setCategories([]);
     } finally {
       setLoading(false);
     }
