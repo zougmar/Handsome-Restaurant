@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import api from '../../utils/api';
 import { FiCalendar, FiTrendingUp, FiDollarSign } from 'react-icons/fi';
 
@@ -6,52 +6,48 @@ const Reports = () => {
   const [dailyReport, setDailyReport] = useState(null);
   const [monthlyReport, setMonthlyReport] = useState(null);
   const [topSelling, setTopSelling] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
-  useEffect(() => {
-    fetchDailyReport();
-  }, [selectedDate]);
-
-  useEffect(() => {
-    fetchMonthlyReport();
-  }, [selectedMonth, selectedYear]);
-
-  useEffect(() => {
-    fetchTopSelling();
-  }, []);
-
-  const fetchDailyReport = async () => {
-    setLoading(true);
+  const fetchDailyReport = useCallback(async () => {
     try {
       const response = await api.get(`/api/reports/daily?date=${selectedDate}`);
       setDailyReport(response.data);
     } catch (error) {
       console.error('Error fetching daily report:', error);
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [selectedDate]);
 
-  const fetchMonthlyReport = async () => {
+  const fetchMonthlyReport = useCallback(async () => {
     try {
       const response = await api.get(`/api/reports/monthly?year=${selectedYear}&month=${selectedMonth}`);
       setMonthlyReport(response.data);
     } catch (error) {
       console.error('Error fetching monthly report:', error);
     }
-  };
+  }, [selectedMonth, selectedYear]);
 
-  const fetchTopSelling = async () => {
+  useEffect(() => {
+    fetchDailyReport();
+  }, [fetchDailyReport]);
+
+  useEffect(() => {
+    fetchMonthlyReport();
+  }, [fetchMonthlyReport]);
+
+  const fetchTopSelling = useCallback(async () => {
     try {
       const response = await api.get('/api/reports/top-selling?limit=10');
       setTopSelling(response.data);
     } catch (error) {
       console.error('Error fetching top selling:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchTopSelling();
+  }, [fetchTopSelling]);
 
   return (
     <div>
