@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import logo from '../images/dark3.webp';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -48,9 +47,13 @@ const AdminLogin = () => {
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
             <img 
-              src={logo} 
+              src="/logo.webp" 
               alt="Handsome Restaurant Logo" 
               className="h-20 w-auto object-contain"
+              onError={(e) => {
+                console.error('Logo failed to load');
+                e.target.style.display = 'none';
+              }}
             />
           </div>
           <h1 className="text-4xl font-bold text-restaurant-gold mb-2">Handsome Restaurant</h1>
