@@ -40,20 +40,36 @@ function loadModel(modelName) {
 // Menu Model
 function getMenuModel() {
   try {
-    return loadModel('Menu');
+    const model = loadModel('Menu');
+    if (model) {
+      console.log('✅ Menu model loaded successfully');
+      return model;
+    }
   } catch (e) {
-    // Create inline if not found
-    const menuSchema = new mongoose.Schema({
-      name: { type: String, required: true, trim: true },
-      description: { type: String, trim: true },
-      price: { type: Number, required: true, min: 0 },
-      category: { type: String, required: true, trim: true },
-      image: { type: String, default: '' },
-      isAvailable: { type: Boolean, default: true },
-      createdAt: { type: Date, default: Date.now }
-    });
-    return mongoose.models.Menu || mongoose.model('Menu', menuSchema);
+    console.warn('⚠️ Could not load Menu model from file, creating inline:', e.message);
   }
+  
+  // Create inline if not found
+  console.log('📝 Creating Menu model inline');
+  const menuSchema = new mongoose.Schema({
+    name: { type: String, required: true, trim: true },
+    description: { type: String, trim: true },
+    price: { type: Number, required: true, min: 0 },
+    category: { type: String, required: true, trim: true },
+    image: { type: String, default: '' },
+    isAvailable: { type: Boolean, default: true },
+    createdAt: { type: Date, default: Date.now }
+  });
+  
+  // Return existing model if already registered, otherwise create new
+  if (mongoose.models.Menu) {
+    console.log('✅ Using existing Menu model from mongoose');
+    return mongoose.models.Menu;
+  }
+  
+  const MenuModel = mongoose.model('Menu', menuSchema);
+  console.log('✅ Created new Menu model');
+  return MenuModel;
 }
 
 // Order Model

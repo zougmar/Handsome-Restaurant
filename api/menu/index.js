@@ -42,11 +42,24 @@ module.exports = async (req, res) => {
     res.status(200).json(menuWithImages);
   } catch (error) {
     console.error('Menu fetch error:', error);
-    console.error('Error stack:', error.stack);
+    console.error('Error details:', {
+      message: error.message,
+      name: error.name,
+      stack: error.stack,
+      code: error.code
+    });
+    
+    // Ensure error message is a string
+    const errorMessage = error?.message || String(error) || 'Unknown error';
+    
     res.status(500).json({ 
       message: 'Server error', 
-      error: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? {
+        name: error.name,
+        code: error.code,
+        stack: error.stack
+      } : undefined
     });
   }
 };
