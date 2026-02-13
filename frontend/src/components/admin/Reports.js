@@ -63,10 +63,7 @@ const Reports = () => {
             <input
               type="date"
               value={selectedDate}
-              onChange={(e) => {
-                setSelectedDate(e.target.value);
-                fetchDailyReport();
-              }}
+              onChange={(e) => setSelectedDate(e.target.value)}
               className="bg-black/30 border border-gray-700 rounded-lg px-4 py-2 text-white"
             />
             <button
@@ -110,10 +107,7 @@ const Reports = () => {
           <div className="flex items-center gap-2">
             <select
               value={selectedMonth}
-              onChange={(e) => {
-                setSelectedMonth(parseInt(e.target.value));
-                fetchMonthlyReport();
-              }}
+              onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
               className="bg-black/30 border border-gray-700 rounded-lg px-4 py-2 text-white"
             >
               {Array.from({ length: 12 }, (_, i) => (
@@ -124,10 +118,7 @@ const Reports = () => {
             </select>
             <select
               value={selectedYear}
-              onChange={(e) => {
-                setSelectedYear(parseInt(e.target.value));
-                fetchMonthlyReport();
-              }}
+              onChange={(e) => setSelectedYear(parseInt(e.target.value))}
               className="bg-black/30 border border-gray-700 rounded-lg px-4 py-2 text-white"
             >
               {Array.from({ length: 5 }, (_, i) => {
