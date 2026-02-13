@@ -96,7 +96,8 @@ function getOrderModel() {
       waiter: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
       createdAt: { type: Date, default: Date.now },
       updatedAt: { type: Date, default: Date.now },
-      completedAt: { type: Date }
+      completedAt: { type: Date },
+      preparingStartedAt: { type: Date }
     });
 
     orderSchema.pre('save', function(next) {

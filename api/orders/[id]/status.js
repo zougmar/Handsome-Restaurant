@@ -53,7 +53,14 @@ module.exports = async (req, res) => {
       return res.status(404).json({ message: 'Order not found' });
     }
 
+    const previousStatus = order.status;
     order.status = status;
+    
+    // Track when status changes to "preparing"
+    if (status === 'preparing' && previousStatus !== 'preparing') {
+      order.preparingStartedAt = new Date();
+    }
+    
     if (status === 'served') {
       order.completedAt = new Date();
     }

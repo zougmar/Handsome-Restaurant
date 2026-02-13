@@ -55,6 +55,9 @@ const orderSchema = new mongoose.Schema({
   },
   completedAt: {
     type: Date
+  },
+  preparingStartedAt: {
+    type: Date
   }
 });
 

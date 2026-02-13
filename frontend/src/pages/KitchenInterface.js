@@ -149,24 +149,48 @@ const KitchenInterface = () => {
     }
   };
 
-  const getElapsedTime = (createdAt) => {
-    if (!createdAt) return '0:00';
-    const now = new Date();
-    const created = new Date(createdAt);
-    const diff = Math.floor((now - created) / 1000);
+  const getElapsedTime = (order) => {
+    // Only show timer when status is "preparing" or "ready"
+    if (!order || (order.status !== 'preparing' && order.status !== 'ready')) {
+      return null;
+    }
+    
+    // Use preparingStartedAt if available, otherwise fallback to createdAt
+    const startTime = order.preparingStartedAt || order.createdAt;
+    if (!startTime) return '0:00';
+    
+    // If status is "ready", calculate time from preparingStartedAt to updatedAt (when it became ready)
+    // If status is "preparing", calculate time from preparingStartedAt to now
+    let endTime;
+    if (order.status === 'ready' && order.updatedAt) {
+      endTime = new Date(order.updatedAt);
+    } else {
+      endTime = new Date();
+    }
+    
+    const start = new Date(startTime);
+    const diff = Math.floor((endTime - start) / 1000);
     const minutes = Math.floor(diff / 60);
     const seconds = diff % 60;
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  // Update timer every second
+  // Update timer every second - only for orders with status "preparing" (timer stops at "ready")
   useEffect(() => {
+    const hasPreparingOrders = orders.some(order => order.status === 'preparing');
+    if (!hasPreparingOrders) return;
+    
     const interval = setInterval(() => {
-      // Force re-render to update timers
-      setOrders(prev => [...prev]);
+      // Force re-render to update timers for preparing orders only
+      setOrders(prev => prev.map(order => {
+        if (order.status === 'preparing') {
+          return { ...order };
+        }
+        return order;
+      }));
     }, 1000);
     return () => clearInterval(interval);
-  }, [orders.length]);
+  }, [orders.length, orders.filter(o => o.status === 'preparing').length]);
 
   if (loading) {
     return (
@@ -216,10 +240,15 @@ const KitchenInterface = () => {
                 </div>
               </div>
               <div className="text-right">
-                <div className="flex items-center gap-1 text-sm text-gray-400">
-                  <FiClock />
-                  <span>{getElapsedTime(order.createdAt)}</span>
-                </div>
+                {(order.status === 'preparing' || order.status === 'ready') && (
+                  <div className="flex items-center gap-1 text-sm text-gray-400">
+                    <FiClock />
+                    <span>{getElapsedTime(order) || '0:00'}</span>
+                    {order.status === 'ready' && (
+                      <span className="text-green-400 ml-1">(Stopped)</span>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 

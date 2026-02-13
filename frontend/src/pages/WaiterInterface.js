@@ -227,23 +227,39 @@ const WaiterInterface = () => {
     }
   };
 
-  const getElapsedTime = (createdAt) => {
-    if (!createdAt) return '0:00';
-    const now = new Date();
-    const created = new Date(createdAt);
-    const diff = Math.floor((now - created) / 1000);
+  const getElapsedTime = (order) => {
+    // Only show timer when status is "preparing" or "ready"
+    if (!order || (order.status !== 'preparing' && order.status !== 'ready')) {
+      return null;
+    }
+    
+    // Use preparingStartedAt if available, otherwise fallback to createdAt
+    const startTime = order.preparingStartedAt || order.createdAt;
+    if (!startTime) return '0:00';
+    
+    // If status is "ready", calculate time from preparingStartedAt to updatedAt (when it became ready)
+    // If status is "preparing", calculate time from preparingStartedAt to now
+    let endTime;
+    if (order.status === 'ready' && order.updatedAt) {
+      endTime = new Date(order.updatedAt);
+    } else {
+      endTime = new Date();
+    }
+    
+    const start = new Date(startTime);
+    const diff = Math.floor((endTime - start) / 1000);
     const minutes = Math.floor(diff / 60);
     const seconds = diff % 60;
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  // Update timer every second
+  // Update timer every second - only when status is "preparing" (timer stops at "ready")
   useEffect(() => {
-    if (!selectedTable?.order) return;
+    if (!selectedTable?.order || selectedTable.order.status !== 'preparing') return;
     const interval = setInterval(() => {
       // Force re-render to update timer
       setSelectedTable(prev => {
-        if (prev && prev.order) {
+        if (prev && prev.order && prev.order.status === 'preparing') {
           return { ...prev };
         }
         return prev;
@@ -251,7 +267,7 @@ const WaiterInterface = () => {
     }, 1000);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTable?.order?._id]);
+  }, [selectedTable?.order?._id, selectedTable?.order?.status]);
 
   if (loading) {
     return (
@@ -651,16 +667,21 @@ const WaiterInterface = () => {
                         </div>
                       </div>
                       
-                      {/* Timer Display */}
-                      <div className="flex items-center justify-center gap-3 bg-gradient-to-r from-restaurant-gold/20 to-restaurant-gold/10 p-4 rounded-xl border border-restaurant-gold/30 shadow-lg">
-                        <FiClock className="text-restaurant-gold text-2xl" />
-                        <div className="text-center">
-                          <p className="text-xs text-gray-300 mb-1 font-medium">Elapsed Time</p>
-                          <p className="text-3xl font-bold text-restaurant-gold font-mono tracking-wider">
-                            {getElapsedTime(selectedTable.order.createdAt)}
-                          </p>
+                      {/* Timer Display - Only show when status is preparing or ready */}
+                      {(selectedTable.order.status === 'preparing' || selectedTable.order.status === 'ready') && (
+                        <div className="flex items-center justify-center gap-3 bg-gradient-to-r from-restaurant-gold/20 to-restaurant-gold/10 p-4 rounded-xl border border-restaurant-gold/30 shadow-lg">
+                          <FiClock className="text-restaurant-gold text-2xl" />
+                          <div className="text-center">
+                            <p className="text-xs text-gray-300 mb-1 font-medium">Elapsed Time</p>
+                            <p className="text-3xl font-bold text-restaurant-gold font-mono tracking-wider">
+                              {getElapsedTime(selectedTable.order) || '0:00'}
+                            </p>
+                            {selectedTable.order.status === 'ready' && (
+                              <p className="text-xs text-green-400 mt-1">(Stopped)</p>
+                            )}
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </div>
 
 
