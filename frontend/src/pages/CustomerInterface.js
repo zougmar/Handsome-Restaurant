@@ -43,7 +43,7 @@ const CustomerInterface = () => {
           console.error('Menu fetch error:', err);
           return { data: [] };
         }),
-        api.get('/api/menu/categories').catch(err => {
+        api.get('/api/menu?type=categories').catch(err => {
           console.error('Categories fetch error:', err);
           return { data: [] };
         })

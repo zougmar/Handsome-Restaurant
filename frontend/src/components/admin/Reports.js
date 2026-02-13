@@ -17,7 +17,7 @@ const Reports = () => {
     setErrors(prev => ({ ...prev, daily: null }));
     try {
       console.log('Fetching daily report for date:', selectedDate);
-      const response = await api.get(`/api/reports/daily?date=${selectedDate}`);
+      const response = await api.get(`/api/reports?type=daily&date=${selectedDate}`);
       console.log('Daily report response:', response.data);
       if (response.data) {
         setDailyReport(response.data);
@@ -44,7 +44,7 @@ const Reports = () => {
     setErrors(prev => ({ ...prev, monthly: null }));
     try {
       console.log('Fetching monthly report for:', selectedYear, selectedMonth);
-      const response = await api.get(`/api/reports/monthly?year=${selectedYear}&month=${selectedMonth}`);
+      const response = await api.get(`/api/reports?type=monthly&year=${selectedYear}&month=${selectedMonth}`);
       console.log('Monthly report response:', response.data);
       if (response.data) {
         setMonthlyReport(response.data);
@@ -79,7 +79,7 @@ const Reports = () => {
     setErrors(prev => ({ ...prev, topSelling: null }));
     try {
       console.log('Fetching top selling items');
-      const response = await api.get('/api/reports/top-selling?limit=10');
+      const response = await api.get('/api/reports?type=top-selling&limit=10');
       console.log('Top selling response:', response.data);
       if (response.data && Array.isArray(response.data)) {
         setTopSelling(response.data);

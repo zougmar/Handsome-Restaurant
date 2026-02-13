@@ -23,6 +23,15 @@ module.exports = async (req, res) => {
   try {
     await connectToDatabase();
     const Menu = getMenuModel();
+    
+    // Check if requesting categories (check both URL path and query param)
+    const urlPath = req.url || '';
+    if (urlPath.includes('/categories') || req.query.type === 'categories') {
+      const categories = await Menu.distinct('category');
+      return res.status(200).json(categories.filter(cat => cat)); // Remove null/undefined
+    }
+    
+    // Otherwise return menu items
     const menu = await Menu.find({ isAvailable: true }).sort({ category: 1, name: 1 });
     
     // Convert to plain objects

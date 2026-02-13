@@ -31,7 +31,7 @@ const MenuManagement = () => {
     try {
       const [menuRes, categoriesRes] = await Promise.all([
         api.get('/api/menu'),
-        api.get('/api/menu/categories')
+        api.get('/api/menu?type=categories')
       ]);
       // Ensure images have full URLs for display
       const menuWithImages = menuRes.data.map(item => ({
