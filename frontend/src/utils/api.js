@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+// Use relative URL for Vercel (same domain) or fallback to environment variable
+const API_BASE_URL = process.env.REACT_APP_API_URL || (typeof window !== 'undefined' ? '' : 'http://localhost:5000');
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -28,8 +29,26 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Log the error for debugging
+    console.error('API Error:', {
+      message: error.message,
+      code: error.code,
+      response: error.response?.data,
+      status: error.response?.status,
+      url: error.config?.url,
+      baseURL: error.config?.baseURL
+    });
+
     if (error.code === 'ECONNREFUSED' || error.message === 'Network Error') {
-      error.message = 'Cannot connect to server. Please make sure the backend is running on port 5000.';
+      const baseURL = error.config?.baseURL || API_BASE_URL;
+      error.message = `Cannot connect to server at ${baseURL}. Please check your REACT_APP_API_URL environment variable.`;
+    } else if (error.response) {
+      // Server responded with error status
+      const message = error.response.data?.message || error.response.data?.error || 'Request failed';
+      error.message = message;
+    } else if (error.request) {
+      // Request made but no response received
+      error.message = 'No response from server. Please check if the backend is running and accessible.';
     }
     return Promise.reject(error);
   }

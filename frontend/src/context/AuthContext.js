@@ -51,9 +51,26 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', newToken);
       return { success: true, user: userData };
     } catch (error) {
+      console.error('Login error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        apiUrl: process.env.REACT_APP_API_URL || 'http://localhost:5000 (default)'
+      });
+      
+      // Provide more specific error messages
+      let errorMessage = 'Login failed';
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      } else if (error.code === 'ECONNREFUSED' || error.message?.includes('Network Error')) {
+        errorMessage = 'Cannot connect to backend server. Please check your REACT_APP_API_URL environment variable in Vercel.';
+      }
+      
       return {
         success: false,
-        message: error.response?.data?.message || 'Login failed'
+        message: errorMessage
       };
     }
   };
