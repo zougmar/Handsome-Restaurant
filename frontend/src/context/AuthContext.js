@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 
 const AuthContext = createContext();
 
@@ -20,12 +20,11 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setUser(null);
     localStorage.removeItem('token');
-    delete axios.defaults.headers.common['Authorization'];
   }, []);
 
   const fetchUser = useCallback(async () => {
     try {
-      const response = await axios.get('/api/auth/me');
+      const response = await api.get('/api/auth/me');
       setUser(response.data.user);
     } catch (error) {
       console.error('Auth error:', error);
@@ -37,7 +36,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       fetchUser();
     } else {
       setLoading(false);
@@ -46,12 +44,11 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('/api/auth/login', { email, password });
+      const response = await api.post('/api/auth/login', { email, password });
       const { token: newToken, user: userData } = response.data;
       setToken(newToken);
       setUser(userData);
       localStorage.setItem('token', newToken);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
       return { success: true, user: userData };
     } catch (error) {
       return {
