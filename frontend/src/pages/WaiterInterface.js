@@ -89,6 +89,11 @@ const WaiterInterface = () => {
     } catch (error) {
       console.error('Error fetching tables:', error);
       console.error('Error details:', error.response?.data || error.message);
+      
+      // Show user-friendly error if tables endpoint fails
+      if (error.response?.status === 404 || error.response?.status === 500) {
+        console.warn('Tables endpoint not available or error occurred');
+      }
       setTables([]);
     }
   };

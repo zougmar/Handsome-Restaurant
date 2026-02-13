@@ -10,9 +10,27 @@ import DashboardHome from '../components/admin/DashboardHome';
 import { FiUsers, FiMenu, FiGrid, FiBarChart2, FiLogOut, FiHome, FiShoppingBag } from 'react-icons/fi';
 
 const AdminDashboard = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Safety check - if user is not loaded, show loading
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-restaurant-dark">
+        <div className="text-center">
+          <div className="text-restaurant-gold text-xl mb-2">Loading...</div>
+          <div className="text-gray-400 text-sm">Loading dashboard</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Safety check - if no user, redirect to login
+  if (!user) {
+    navigate('/admin/login');
+    return null;
+  }
 
   const handleLogout = () => {
     logout();

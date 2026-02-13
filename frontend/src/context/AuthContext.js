@@ -24,10 +24,22 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = useCallback(async () => {
     try {
+      console.log('Fetching user...');
       const response = await api.get('/api/auth/me');
-      setUser(response.data.user);
+      console.log('User fetched:', response.data.user);
+      if (response.data && response.data.user) {
+        setUser(response.data.user);
+      } else {
+        console.warn('No user data in response:', response.data);
+        logout();
+      }
     } catch (error) {
       console.error('Auth error:', error);
+      console.error('Error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
       logout();
     } finally {
       setLoading(false);
@@ -44,11 +56,26 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
+      console.log('Attempting login for:', email);
       const response = await api.post('/api/auth/login', { email, password });
+      console.log('Login response:', response.data);
+      
+      if (!response.data) {
+        throw new Error('No data in login response');
+      }
+
       const { token: newToken, user: userData } = response.data;
+      
+      if (!newToken || !userData) {
+        throw new Error('Missing token or user data in response');
+      }
+
+      console.log('Setting token and user...');
       setToken(newToken);
       setUser(userData);
       localStorage.setItem('token', newToken);
+      
+      console.log('Login successful');
       return { success: true, user: userData };
     } catch (error) {
       console.error('Login error details:', {
@@ -62,6 +89,10 @@ export const AuthProvider = ({ children }) => {
       let errorMessage = 'Login failed';
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
+      } else if (error.response?.data?.error) {
+        errorMessage = typeof error.response.data.error === 'string' 
+          ? error.response.data.error 
+          : error.response.data.error.message || errorMessage;
       } else if (error.message) {
         errorMessage = error.message;
       } else if (error.code === 'ECONNREFUSED' || error.message?.includes('Network Error')) {

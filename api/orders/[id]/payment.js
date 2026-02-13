@@ -1,6 +1,5 @@
 const { connectToDatabase } = require('../../_lib/mongodb');
-const path = require('path');
-const Order = require(path.join(process.cwd(), 'backend', 'models', 'Order'));
+const { getOrderModel } = require('../../_lib/models');
 const { body, validationResult } = require('express-validator');
 
 module.exports = async (req, res) => {
@@ -24,8 +23,14 @@ module.exports = async (req, res) => {
 
   try {
     await connectToDatabase();
+    const Order = getOrderModel();
+    
     // Vercel passes dynamic route params in req.query
     const orderId = req.query.id;
+
+    if (!orderId) {
+      return res.status(400).json({ message: 'Order ID is required' });
+    }
 
     // Validation
     await body('paymentStatus')
@@ -35,7 +40,10 @@ module.exports = async (req, res) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ 
+        message: 'Validation failed',
+        errors: errors.array() 
+      });
     }
 
     const { paymentStatus } = req.body;
@@ -48,12 +56,35 @@ module.exports = async (req, res) => {
     order.paymentStatus = paymentStatus;
     await order.save();
 
-    await order.populate('items.menuItem', 'name price image');
-    await order.populate('waiter', 'name');
+    // Convert to plain object for response
+    const orderObj = order.toObject ? order.toObject() : order;
+    const orderResponse = {
+      ...orderObj,
+      _id: orderObj._id?.toString() || orderObj._id
+    };
 
-    return res.status(200).json(order);
+    console.log('Payment status updated successfully:', orderId, 'to', paymentStatus);
+    return res.status(200).json(orderResponse);
   } catch (error) {
     console.error('Update payment status error:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    console.error('Error details:', {
+      message: error.message,
+      name: error.name,
+      stack: error.stack,
+      code: error.code
+    });
+    
+    // Ensure error message is a string
+    const errorMessage = error?.message || String(error) || 'Unknown error';
+    
+    res.status(500).json({ 
+      message: 'Server error', 
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? {
+        name: error.name,
+        code: error.code,
+        stack: error.stack
+      } : undefined
+    });
   }
 };

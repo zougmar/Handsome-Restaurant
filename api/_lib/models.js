@@ -138,8 +138,30 @@ function getUserModel() {
   }
 }
 
+// Table Model
+function getTableModel() {
+  try {
+    return loadModel('Table');
+  } catch (e) {
+    // Create inline if not found
+    const tableSchema = new mongoose.Schema({
+      number: { type: Number, required: true, unique: true },
+      capacity: { type: Number, required: true, min: 1 },
+      status: { 
+        type: String, 
+        enum: ['available', 'occupied', 'reserved'], 
+        default: 'available' 
+      },
+      currentOrder: { type: mongoose.Schema.Types.ObjectId, ref: 'Order' },
+      createdAt: { type: Date, default: Date.now }
+    });
+    return mongoose.models.Table || mongoose.model('Table', tableSchema);
+  }
+}
+
 module.exports = {
   getMenuModel,
   getOrderModel,
-  getUserModel
+  getUserModel,
+  getTableModel
 };

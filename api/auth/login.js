@@ -1,7 +1,6 @@
 const { connectToDatabase } = require('../_lib/mongodb');
 const { generateToken } = require('../_lib/auth');
-const path = require('path');
-const User = require(path.join(process.cwd(), 'backend', 'models', 'User'));
+const { getUserModel } = require('../_lib/models');
 const { body, validationResult } = require('express-validator');
 
 module.exports = async (req, res) => {
@@ -25,6 +24,7 @@ module.exports = async (req, res) => {
 
   try {
     await connectToDatabase();
+    const User = getUserModel();
 
     // Validation
     await Promise.all([
@@ -34,7 +34,10 @@ module.exports = async (req, res) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ 
+        message: 'Validation failed',
+        errors: errors.array() 
+      });
     }
 
     const { email, password } = req.body;
@@ -58,17 +61,38 @@ module.exports = async (req, res) => {
 
     const token = generateToken(user._id);
 
+    // Convert user to plain object
+    const userObj = user.toObject ? user.toObject() : user;
+    
     res.status(200).json({
       token,
       user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
+        id: userObj._id?.toString() || userObj._id,
+        name: userObj.name,
+        email: userObj.email,
+        role: userObj.role
       }
     });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    console.error('Error details:', {
+      message: error.message,
+      name: error.name,
+      stack: error.stack,
+      code: error.code
+    });
+    
+    // Ensure error message is a string
+    const errorMessage = error?.message || String(error) || 'Unknown error';
+    
+    res.status(500).json({ 
+      message: 'Server error', 
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? {
+        name: error.name,
+        code: error.code,
+        stack: error.stack
+      } : undefined
+    });
   }
 };

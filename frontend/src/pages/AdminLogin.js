@@ -15,21 +15,30 @@ const AdminLogin = () => {
     setError('');
     setLoading(true);
 
-    const result = await login(email, password);
-    
-    if (result.success) {
-      // Check user role from result
-      const userRole = result.user?.role;
-      if (userRole === 'admin') {
-        navigate('/admin');
+    try {
+      const result = await login(email, password);
+      
+      if (result && result.success) {
+        // Check user role from result
+        const userRole = result.user?.role;
+        if (userRole === 'admin') {
+          // Small delay to ensure state is updated
+          setTimeout(() => {
+            navigate('/admin');
+          }, 100);
+        } else {
+          setError('Admin access required');
+          setLoading(false);
+        }
       } else {
-        setError('Admin access required');
+        setError(result?.message || 'Login failed');
+        setLoading(false);
       }
-    } else {
-      setError(result.message || 'Login failed');
+    } catch (error) {
+      console.error('Login submission error:', error);
+      setError('An unexpected error occurred. Please try again.');
+      setLoading(false);
     }
-    
-    setLoading(false);
   };
 
   return (

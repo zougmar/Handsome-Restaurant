@@ -1,5 +1,6 @@
 const { connectToDatabase } = require('../_lib/mongodb');
 const { verifyToken } = require('../_lib/auth');
+const { getUserModel } = require('../_lib/models');
 
 module.exports = async (req, res) => {
   // Set CORS headers
@@ -24,16 +25,29 @@ module.exports = async (req, res) => {
     await connectToDatabase();
     const user = await verifyToken(req);
 
+    // Convert user to plain object
+    const userObj = user.toObject ? user.toObject() : user;
+
     res.status(200).json({
       user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
+        id: userObj._id?.toString() || userObj._id,
+        name: userObj.name,
+        email: userObj.email,
+        role: userObj.role
       }
     });
   } catch (error) {
     console.error('Get user error:', error);
-    res.status(401).json({ message: error.message || 'Unauthorized' });
+    console.error('Error details:', {
+      message: error.message,
+      name: error.name,
+      stack: error.stack
+    });
+    
+    const errorMessage = error?.message || String(error) || 'Unauthorized';
+    res.status(401).json({ 
+      message: errorMessage,
+      error: errorMessage
+    });
   }
 };

@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
-const path = require('path');
-const User = require(path.join(process.cwd(), 'backend', 'models', 'User'));
+const { getUserModel } = require('./models');
 
 // Generate JWT token
 function generateToken(userId) {
@@ -25,6 +24,7 @@ async function verifyToken(req) {
       process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-this-in-production'
     );
 
+    const User = getUserModel();
     const user = await User.findById(decoded.userId).select('-password');
     if (!user || !user.isActive) {
       throw new Error('User not found or inactive');

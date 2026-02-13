@@ -109,7 +109,25 @@ const KitchenInterface = () => {
     } catch (error) {
       console.error('Error updating order status:', error);
       console.error('Error details:', error.response?.data || error.message);
-      alert(`Failed to update order status: ${error.response?.data?.message || error.message}`);
+      
+      // Extract error message properly
+      let errorMessage = 'Failed to update order status. Please try again.';
+      
+      if (error.response?.data) {
+        if (error.response.data.message) {
+          errorMessage = error.response.data.message;
+        } else if (error.response.data.error) {
+          errorMessage = typeof error.response.data.error === 'string' 
+            ? error.response.data.error 
+            : error.response.data.error.message || errorMessage;
+        } else if (error.response.data.errors && Array.isArray(error.response.data.errors)) {
+          errorMessage = error.response.data.errors[0]?.msg || error.response.data.errors[0]?.message || errorMessage;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      alert(`Failed to update order status: ${errorMessage}`);
     }
   };
 
