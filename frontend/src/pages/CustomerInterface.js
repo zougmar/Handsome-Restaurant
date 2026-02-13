@@ -128,10 +128,25 @@ const CustomerInterface = () => {
       setTableNumber('');
     } catch (error) {
       console.error('Error placing order:', error);
-      const errorMessage = error.response?.data?.message || 
-                           error.response?.data?.errors?.[0]?.msg ||
-                           error.message ||
-                           'Failed to place order. Please try again.';
+      console.error('Error response:', error.response?.data);
+      
+      // Extract error message properly
+      let errorMessage = 'Failed to place order. Please try again.';
+      
+      if (error.response?.data) {
+        if (error.response.data.message) {
+          errorMessage = error.response.data.message;
+        } else if (error.response.data.errors && Array.isArray(error.response.data.errors)) {
+          errorMessage = error.response.data.errors[0]?.msg || error.response.data.errors[0]?.message || errorMessage;
+        } else if (error.response.data.error) {
+          errorMessage = typeof error.response.data.error === 'string' 
+            ? error.response.data.error 
+            : error.response.data.error.message || errorMessage;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
       alert(`Error: ${errorMessage}`);
     }
   };
