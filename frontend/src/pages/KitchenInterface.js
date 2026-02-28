@@ -6,6 +6,7 @@ import { FiCheck, FiClock } from 'react-icons/fi';
 const KitchenInterface = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [tick, setTick] = useState(0);
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -175,24 +176,13 @@ const KitchenInterface = () => {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  // Update timer every second - only for orders with status "preparing" (timer stops at "ready")
+  // Update timer every second - only when there are orders with status "preparing"
   const preparingCount = orders.filter(o => o.status === 'preparing').length;
   useEffect(() => {
-    const hasPreparingOrders = orders.some(order => order.status === 'preparing');
-    if (!hasPreparingOrders) return;
-
-    const interval = setInterval(() => {
-      // Force re-render to update timers for preparing orders only
-      setOrders(prev => prev.map(order => {
-        if (order.status === 'preparing') {
-          return { ...order };
-        }
-        return order;
-      }));
-    }, 1000);
+    if (preparingCount === 0) return;
+    const interval = setInterval(() => setTick((t) => t + 1), 1000);
     return () => clearInterval(interval);
-    // orders omitted intentionally: including it would reset the interval every second when the timer updates state
-  }, [orders.length, preparingCount]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [preparingCount]);
 
   if (loading) {
     return (
@@ -245,7 +235,7 @@ const KitchenInterface = () => {
                 {(order.status === 'preparing' || order.status === 'ready') && (
                   <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-400">
                     <FiClock className="text-sm sm:text-base" />
-                    <span>{getElapsedTime(order) || '0:00'}</span>
+                    <span data-tick={tick}>{getElapsedTime(order) || '0:00'}</span>
                     {order.status === 'ready' && (
                       <span className="text-green-400 ml-1 hidden sm:inline">(Stopped)</span>
                     )}
