@@ -176,10 +176,11 @@ const KitchenInterface = () => {
   };
 
   // Update timer every second - only for orders with status "preparing" (timer stops at "ready")
+  const preparingCount = orders.filter(o => o.status === 'preparing').length;
   useEffect(() => {
     const hasPreparingOrders = orders.some(order => order.status === 'preparing');
     if (!hasPreparingOrders) return;
-    
+
     const interval = setInterval(() => {
       // Force re-render to update timers for preparing orders only
       setOrders(prev => prev.map(order => {
@@ -190,7 +191,9 @@ const KitchenInterface = () => {
       }));
     }, 1000);
     return () => clearInterval(interval);
-  }, [orders.length, orders.filter(o => o.status === 'preparing').length]);
+    // orders omitted intentionally: including it would reset the interval every second when the timer updates state
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orders.length, preparingCount]);
 
   if (loading) {
     return (
