@@ -192,8 +192,7 @@ const KitchenInterface = () => {
     }, 1000);
     return () => clearInterval(interval);
     // orders omitted intentionally: including it would reset the interval every second when the timer updates state
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orders.length, preparingCount]);
+  }, [orders.length, preparingCount]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (loading) {
     return (
